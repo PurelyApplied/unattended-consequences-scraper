@@ -15,13 +15,6 @@ TEST_EPISODE = ('https://unattendedconsequences.simplecast.fm/episodes/'
                 '46481-derrida-is-the-biggest-wanker')
 
 
-# Example episode block:
-'''
-<time class="podcast-episode-date" datetime="2016-10-24">24 October 2016</time>
-<h3 class="podcast-episode-title"><a href="/episodes/50539-i-m-not-here-to-judge-you-chickenf-ckers">I'm Not Here to Judge You Chickenf*ckers</a></h3>
-'''
-
-
 def main():
     prepare()
     scrape_top()
@@ -36,6 +29,12 @@ folder structure?'''
     if not os.path.exists('episodes'):
         os.mkdir('episodes')
 
+
+# Example episode block:
+'''
+<time class="podcast-episode-date" datetime="2016-10-24">24 October 2016</time>
+<h3 class="podcast-episode-title"><a href="/episodes/50539-i-m-not-here-to-judge-you-chickenf-ckers">I'm Not Here to Judge You Chickenf*ckers</a></h3>
+'''
 
 def scrape_top():
     '''Begins at the Unattended Consequences episodes root, identifies
@@ -77,6 +76,7 @@ directory.
         
 
 def download_mp3(href, out_filename=None):
+    '''Downloads mp3 link to provided filename.'''
     logging.info("Downloading link {!r}".format(href))
     req = Request(href, headers={'User-Agent' : 'Magic Browser'})
     logging.debug("Opening href...")
@@ -89,6 +89,8 @@ def download_mp3(href, out_filename=None):
         
 
 def get_mp3_links_from_page(url):
+    '''Searches the given page for links, returning a list that link
+directly to mp3s.'''
     url_source = urlopen(url)
     link_strainer = SoupStrainer("a")
     soup = BeautifulSoup(url_source)
@@ -98,7 +100,6 @@ def get_mp3_links_from_page(url):
                for item in downloads
                if item.attrs['href'][-4:].lower() == '.mp3']
     return targets
-
 
 
 def sanitize_title(title):
@@ -123,8 +124,9 @@ def get_top_soup():
     return soup
 
 
-logging.getLogger('').setLevel(logging.DEBUG)
-
 if __name__=="__main__":
-    main()
+    logging.getLogger('').setLevel(logging.DEBUG)
+    if 'y' in input("Run main()?  y/n >> ").lower():
+        logging.getLogger('').setLevel(logging.INFO)
+        main()
     
