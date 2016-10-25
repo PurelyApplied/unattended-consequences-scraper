@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Considerations: trawl first, then do the downloads?  Consider multithreading?
 
 from bs4 import BeautifulSoup, SoupStrainer
@@ -123,4 +125,6 @@ def get_top_soup():
 
 logging.getLogger('').setLevel(logging.DEBUG)
 
-
+if __name__=="__main__":
+    main()
+    
